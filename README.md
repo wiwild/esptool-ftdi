@@ -69,6 +69,10 @@ add
 This could be simplified with some changes in ESP-IDF.
 
 ## Ubuntu 19.04
+If you have unmet dependency : 
+
+    sudo apt install python-libusb1 ppython-ftdi1
+
 If you can't use without sudo follow those steps : 
 
     sudo usermod -aG tty $USER
