@@ -1,4 +1,6 @@
 # esptool-ftdi.py
+This version correct a bug which prevent serial from closing because close is undefined
+
 
 ## Overview
 
@@ -65,3 +67,11 @@ add
     ESPTOOLPY_SERIAL := $(PYTHON) $(ESPTOOL_FTDI) $(ESPTOOLPY_SRC) --chip esp32 --port $(ESPPORT) --baud $(ESPBAUD) --before $(CONFIG_ESPTOOLPY_BEFORE) --after $(CONFIG_ESPTOOLPY_AFTER)
 
 This could be simplified with some changes in ESP-IDF.
+
+## Ubuntu 19.04
+If you can't use without sudo follow those steps : 
+
+    sudo usermod -aG tty $USER
+    sudo usermod -aG dialout $USER
+    echo 'SUBSYSTEM=="usb", ATTRS{idVendor}=="0403", GROUP="dialout"' | sudo tee -a /etc/udev/rules.d/60-libftdi.rules >         /dev/null
+    reboot 
