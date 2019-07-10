@@ -93,6 +93,9 @@ class serial_via_libftdi(object):
 
     def __del__(self):
         self._ftdi_close()
+        
+    def close(self):
+        self._ftdi_close()
 
     def __init__(self, port):
         self.port = port
