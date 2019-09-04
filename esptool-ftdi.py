@@ -268,5 +268,4 @@ if __name__ == "__main__":
 
     esptool = import_from_path(sys.argv[1])
     esptool.serial = serial_via_libftdi
-    sys.argv[1:] = sys.argv[2:]
     esptool.main()
