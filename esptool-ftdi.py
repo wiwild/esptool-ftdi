@@ -5,15 +5,17 @@
 # on FTDI devices, and requires libftdi1 and libusb-1.0.
 
 from __future__ import print_function
+import sys
+import time
+import functools
+import ctypes.util
+import ctypes
+import os
+
+
 def printf(str, *args):
     print(str % args, end='')
 
-import sys
-import os
-import ctypes
-import ctypes.util
-import functools
-import time
 
 class ftdi_context_partial(ctypes.Structure):
     # This is for libftdi 1.0+
@@ -22,8 +24,10 @@ class ftdi_context_partial(ctypes.Structure):
                 ('usb_read_timeout', ctypes.c_int),
                 ('usb_write_timeout', ctypes.c_int)]
 
+
 class FTDIError(Exception):
     pass
+
 
 class serial_via_libftdi(object):
     @staticmethod
@@ -93,7 +97,7 @@ class serial_via_libftdi(object):
 
     def __del__(self):
         self._ftdi_close()
-        
+
     def close(self):
         self._ftdi_close()
 
@@ -203,7 +207,7 @@ class serial_via_libftdi(object):
     def baudrate(self, val):
         if self.ftdi_fn.ftdi_set_baudrate(val) != 0:
             self._ftdi_error("ftdi_set_baudrate")
-        self._baudrate = val;
+        self._baudrate = val
 
     def write(self, buf):
         try:
@@ -238,26 +242,18 @@ class serial_via_libftdi(object):
             if time.time() - start > self._timeout:
                 return b''
 
+
 # Old esptool compares serial objects against this
 serial_via_libftdi.Serial = serial_via_libftdi
+
 
 def import_from_path(path, name="esptool"):
     if not os.path.isfile(path):
         raise Exception("No such file: %s" % path)
-
-    # Import esptool from the provided location
-    if sys.version_info >= (3,5):
-        import importlib.util
-        spec = importlib.util.spec_from_file_location(name, path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-    elif sys.version_info >= (3,3):
-        from importlib.machinery import SourceFileLoader
-        module = SourceFileLoader(name, path).load_module()
-    else:
-        import imp
-        module = imp.load_source(name, path)
+    from importlib.machinery import SourceFileLoader
+    module = SourceFileLoader(name, path).load_module()
     return module
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -266,6 +262,6 @@ if __name__ == "__main__":
 
     printf("esptool-ftdi.py wrapper\n")
 
-    esptool = import_from_path(sys.argv[1])
+    esptool = import_from_path("./esptool.py.back")
     esptool.serial = serial_via_libftdi
     esptool.main()
