@@ -23,39 +23,8 @@ sequence work.
 This was tested on Linux only.  Some of the `ctypes` library loading
 probably needs to be tweaked for other OSes.
 
-## Usage
-
-    $ ./esptool-ftdi.py
-    usage: ./esptool-ftdi.py <path-to-esptool.py> [args...]
-
-Simply prepend `esptool-ftdi.py` to your existing esptool command
-line.  For example, instead of:
-
-    $ esptool.py chip_id
-    esptool.py v2.3.1
-    Connecting........_____....._____....._____....._____....._____....._____....._____....._____....._____....._____
-    
-    A fatal error occurred: Failed to connect to Espressif device: Timed out waiting for packet header
-    $
-
-run this and be much happier:
-
-    $ ./esptool-ftdi.py esptool.py chip_id
-    esptool-ftdi.py wrapper
-    esptool.py v2.3.1
-    /dev/ttyUSB0 is at bus 3 dev 78 interface 0
-    Connecting.....
-    Detecting chip type... ESP32
-    Chip is ESP32D0WDQ6 (revision (unknown 0xa))
-    Features: WiFi, BT, Dual Core, VRef calibration in efuse
-    Uploading stub...
-    Running stub...
-    Stub running...
-    Chip ID: 0xe2b4e62dac76
-    Hard resetting via RTS pin...
-    $
-
-## Integrating with ESP-IDF
+## 2 install options 
+## #1 Integrating with ESP-IDF
 
 In your Makefile, after the line
 
@@ -68,10 +37,16 @@ add
 
 This could be simplified with some changes in ESP-IDF.
 
+## #2 Esptool replacement
+
+Locate your esptool.py in $IDF_PATH/components/esptool_py/esptool.py
+Rename it esptool.py.back
+Put esptool-ftdi.py in place and rename it esptool.py
+
 ## Ubuntu 19.04
 If you have unmet dependency : 
 
-    sudo apt install python-libusb1 python-ftdi1
+    sudo apt install python3-libusb1 python3-ftdi1
 
 If you can't use without sudo follow those steps : 
 
